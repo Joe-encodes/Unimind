@@ -1,0 +1,407 @@
+{
+  "users": [
+    {
+      "id": "507ad20a-d846-4736-b723-bcd0dd0cd4e8",
+      "name": "melvin",
+      "email": "diokpamelvin29@gmail.com",
+      "password": "12345",
+      "role": "student",
+      "flagged": false
+    },
+    {
+      "id": "766ef05c-3dea-4927-88de-3a3048397931",
+      "name": "melvin",
+      "email": "diokpamelvin19@gmail.com",
+      "password": "$2b$10$zHqliR.h90ggf5n9V5dNh.Vp1vGavG21YnOrriH8ARx309dphsRC.",
+      "role": "student",
+      "flagged": true
+    },
+    {
+      "id": "dd684f7a-6d8c-48d9-8111-fc294f83b34c",
+      "name": "g7g",
+      "email": "diokpamin29rhr@gmail.com",
+      "password": "$2b$10$Lsurik5uNA7yYs/D4RXNsOI2eLMe0gKH70hMwL3NWg9nqpqCqlCmy",
+      "role": "student",
+      "flagged": true
+    },
+    {
+      "id": "f0787257-3abf-4326-9d25-c3f80875d409",
+      "name": "micheal",
+      "email": "melgrizzbarbecueplace@gmail.com",
+      "password": "$2b$10$Bj87w/v9BeAKW.aX5/vvPeOX6x5.Pu28S7Qp2NdHx77LY8IO0zZ6S",
+      "role": "student",
+      "flagged": true
+    },
+    {
+      "id": "7c81cba9-50ff-4ae7-927d-c735e766699a",
+      "name": "man",
+      "email": "ggg@gmail.com",
+      "password": "$2b$10$Iz8lUgPYXUwMGf/cnrozcuzDSNdm4VQytE/gpjEcN7Upot9zcPSDK",
+      "role": "student",
+      "flagged": true
+    },
+    {
+      "id": "fe99580b-013d-4e70-9516-ba9601996df8",
+      "name": "mel",
+      "email": "gggnuujh@gmail.com",
+      "password": "$2b$10$ejFuOopi0xS.jPwLeSdY0Oab.bs6SuacPx5PJ80aawdtRXngJvF8K",
+      "role": "student",
+      "flagged": true
+    },
+    {
+      "id": "8b95de42-4fa4-4165-9e04-025a5ac0b647",
+      "name": "mannn",
+      "email": "gegg@gmail.com",
+      "password": "$2b$10$pF2W21pMLnmFb6vD6Z3q4emxkS1ToIr5QgPZOHrVZ4c8eWVGBk5ym",
+      "role": "student",
+      "flagged": false
+    }
+  ],
+  "moods": [
+    {
+      "id": "de028ff3-5edc-4bb7-a8aa-cfc85302f620",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-04T22:29:32.004Z"
+    },
+    {
+      "id": "a62cc953-bba1-4426-87c9-157f1d7a4dcb",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-04T22:29:33.624Z"
+    },
+    {
+      "id": "05f5c164-69e4-47b1-a02d-adc106686cbe",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "mood": "Stressed",
+      "notes": "",
+      "date": "2026-05-04T22:29:34.999Z"
+    },
+    {
+      "id": "c693ea5c-2ad1-46df-9c71-47c5a755651a",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-04T23:16:22.359Z"
+    },
+    {
+      "id": "ac2ef8f9-445a-4daf-bc80-b6fd9be26541",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "mood": "Stressed",
+      "notes": "",
+      "date": "2026-05-04T23:16:40.295Z"
+    },
+    {
+      "id": "9caf2d91-b750-4ad3-88c4-c16aec7994d0",
+      "userId": "dd684f7a-6d8c-48d9-8111-fc294f83b34c",
+      "mood": "Neutral",
+      "notes": "",
+      "date": "2026-05-04T23:25:42.619Z"
+    },
+    {
+      "id": "48323e1e-2b35-4cb2-94f3-46b3f6c15794",
+      "userId": "dd684f7a-6d8c-48d9-8111-fc294f83b34c",
+      "mood": "Stressed",
+      "notes": "",
+      "date": "2026-05-04T23:25:44.911Z"
+    },
+    {
+      "id": "16e5460a-77d4-4c1d-91ba-9ce800ad72bf",
+      "userId": "dd684f7a-6d8c-48d9-8111-fc294f83b34c",
+      "mood": "Neutral",
+      "notes": "",
+      "date": "2026-05-04T23:25:46.698Z"
+    },
+    {
+      "id": "a0210e44-9f91-43e7-bc1a-6caa22354f8b",
+      "userId": "dd684f7a-6d8c-48d9-8111-fc294f83b34c",
+      "mood": "Neutral",
+      "notes": "",
+      "date": "2026-05-04T23:25:49.054Z"
+    },
+    {
+      "id": "413c5c20-a117-4192-90ae-bdd6b00e18c3",
+      "userId": "dd684f7a-6d8c-48d9-8111-fc294f83b34c",
+      "mood": "Stressed",
+      "notes": "",
+      "date": "2026-05-04T23:25:51.187Z"
+    },
+    {
+      "id": "06ad615b-5de2-435e-a2ee-434ab5d6a608",
+      "userId": "dd684f7a-6d8c-48d9-8111-fc294f83b34c",
+      "mood": "Stressed",
+      "notes": "",
+      "date": "2026-05-04T23:25:53.118Z"
+    },
+    {
+      "id": "80cee9ae-f92b-4cb4-b811-2958bbdb9c13",
+      "userId": "dd684f7a-6d8c-48d9-8111-fc294f83b34c",
+      "mood": "Stressed",
+      "notes": "",
+      "date": "2026-05-04T23:25:55.286Z"
+    },
+    {
+      "id": "dc590bdc-8e0f-4eb7-9761-d6e762fd60f5",
+      "userId": "f0787257-3abf-4326-9d25-c3f80875d409",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-05T18:39:19.723Z"
+    },
+    {
+      "id": "06bf61a6-99ed-430d-82dc-7dff9ed887d7",
+      "userId": "f0787257-3abf-4326-9d25-c3f80875d409",
+      "mood": "Neutral",
+      "notes": "",
+      "date": "2026-05-05T18:39:23.102Z"
+    },
+    {
+      "id": "662ddc1c-c7e9-42c2-bc94-b0322c451341",
+      "userId": "f0787257-3abf-4326-9d25-c3f80875d409",
+      "mood": "Stressed",
+      "notes": "",
+      "date": "2026-05-05T18:39:25.854Z"
+    },
+    {
+      "id": "e2891b58-fcce-415f-8322-c6d424bd9616",
+      "userId": "f0787257-3abf-4326-9d25-c3f80875d409",
+      "mood": "Stressed",
+      "notes": "",
+      "date": "2026-05-05T18:39:28.901Z"
+    },
+    {
+      "id": "b706f0aa-4c49-4210-8142-32eb15d07129",
+      "userId": "f0787257-3abf-4326-9d25-c3f80875d409",
+      "mood": "Stressed",
+      "notes": "",
+      "date": "2026-05-05T18:39:31.402Z"
+    },
+    {
+      "id": "e74349dc-ac4d-4483-87af-5843db81b399",
+      "userId": "fe99580b-013d-4e70-9516-ba9601996df8",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-07T15:01:09.624Z"
+    },
+    {
+      "id": "e989805e-c515-4a28-a17c-9a2d8cb484db",
+      "userId": "fe99580b-013d-4e70-9516-ba9601996df8",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-07T15:01:12.167Z"
+    },
+    {
+      "id": "cb9b702c-62de-48c5-8e79-862b4c8e4a34",
+      "userId": "fe99580b-013d-4e70-9516-ba9601996df8",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-07T15:01:13.934Z"
+    },
+    {
+      "id": "89662c35-a6ef-43a9-bc93-9e341dbc4587",
+      "userId": "fe99580b-013d-4e70-9516-ba9601996df8",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-14T00:02:30.487Z"
+    },
+    {
+      "id": "787976a4-90ce-44af-9bbe-a6675456e3bf",
+      "userId": "7c81cba9-50ff-4ae7-927d-c735e766699a",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-14T09:56:00.983Z"
+    },
+    {
+      "id": "29d2e738-2a2e-4e71-82e4-55c073ee005e",
+      "userId": "7c81cba9-50ff-4ae7-927d-c735e766699a",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-14T09:56:04.145Z"
+    },
+    {
+      "id": "921690ad-4fdb-4224-8f6a-126ba4cee3ba",
+      "userId": "7c81cba9-50ff-4ae7-927d-c735e766699a",
+      "mood": "Sad",
+      "notes": "",
+      "date": "2026-05-14T09:56:06.649Z"
+    }
+  ],
+  "trackerLogs": [
+    {
+      "id": "54ce3239-964d-430e-913a-c1f981c43b18",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "porn",
+      "date": "2026-05-04T23:11:13.972Z"
+    },
+    {
+      "id": "8c33143c-74a9-4c97-9f6c-4acaf5a5467f",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "porn",
+      "date": "2026-05-04T23:11:22.545Z"
+    },
+    {
+      "id": "c332eeef-a500-466a-a549-e5422ee8716a",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "relapse",
+      "challengeType": "porn",
+      "date": "2026-05-04T23:11:26.680Z"
+    },
+    {
+      "id": "f94520af-c08f-413d-ac61-69bf029ad5da",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "porn",
+      "date": "2026-05-04T23:13:36.020Z"
+    },
+    {
+      "id": "0ac4cb4a-3a49-421d-868d-ebfbe5cf0d31",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "porn",
+      "date": "2026-05-04T23:13:57.150Z"
+    },
+    {
+      "id": "f3360534-f169-4283-a2b8-cbc70fa01392",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "relapse",
+      "challengeType": "porn",
+      "date": "2026-05-04T23:14:02.682Z"
+    },
+    {
+      "id": "6eab0b33-1b23-40c8-94f4-c072ff0eab37",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "substance",
+      "date": "2026-05-04T23:14:12.922Z"
+    },
+    {
+      "id": "5a5413ef-12c5-4313-b16e-5f0b6709e6c2",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "relapse",
+      "challengeType": "substance",
+      "date": "2026-05-04T23:14:21.181Z"
+    },
+    {
+      "id": "0655b174-5b74-4cb3-b6f8-0d16e0761bb3",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "substance",
+      "date": "2026-05-04T23:14:24.866Z"
+    },
+    {
+      "id": "451a9111-e8ac-4bdb-a64b-6cb78d3a3ac3",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "substance",
+      "date": "2026-05-04T23:14:32.878Z"
+    },
+    {
+      "id": "802e015b-8bb8-43d6-b0a9-c9ab50c1ec63",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "substance",
+      "date": "2026-05-04T23:14:35.357Z"
+    },
+    {
+      "id": "4604bb54-3180-475d-9ecd-2932eeb73130",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "substance",
+      "date": "2026-05-04T23:14:37.551Z"
+    },
+    {
+      "id": "8dc560be-1b8a-42bc-84ea-1b1039c8aba5",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "porn",
+      "date": "2026-05-04T23:20:52.504Z"
+    },
+    {
+      "id": "e3c425fa-7c60-4055-b19b-e3dbde3883b2",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "relapse",
+      "challengeType": "porn",
+      "date": "2026-05-04T23:21:01.915Z"
+    },
+    {
+      "id": "f4519807-0812-4a93-ae31-a4d7ab1129ad",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "clean",
+      "challengeType": "substance",
+      "date": "2026-05-04T23:21:45.521Z"
+    },
+    {
+      "id": "799860b9-8932-41e6-9502-35ef88f56315",
+      "userId": "766ef05c-3dea-4927-88de-3a3048397931",
+      "status": "relapse",
+      "challengeType": "substance",
+      "date": "2026-05-04T23:21:49.088Z"
+    },
+    {
+      "id": "6f7498ec-03bf-4c8a-acf8-6e6ecf2b74c3",
+      "userId": "dd684f7a-6d8c-48d9-8111-fc294f83b34c",
+      "status": "clean",
+      "challengeType": "porn",
+      "date": "2026-05-04T23:25:10.515Z"
+    },
+    {
+      "id": "202f363b-a472-4954-9e05-34026995f67f",
+      "userId": "f0787257-3abf-4326-9d25-c3f80875d409",
+      "status": "clean",
+      "challengeType": "porn",
+      "date": "2026-05-05T18:41:47.270Z"
+    },
+    {
+      "id": "0ed9dedd-b1eb-4065-993d-c319d261a10a",
+      "userId": "f0787257-3abf-4326-9d25-c3f80875d409",
+      "status": "relapse",
+      "challengeType": "porn",
+      "date": "2026-05-05T18:42:10.742Z"
+    },
+    {
+      "id": "5e14479c-e673-4e1e-ab02-302072dfb958",
+      "userId": "f0787257-3abf-4326-9d25-c3f80875d409",
+      "status": "clean",
+      "challengeType": "substance",
+      "date": "2026-05-05T18:42:37.926Z"
+    },
+    {
+      "id": "7c387713-26c2-46c6-a3fb-85a53d4b9cee",
+      "userId": "f0787257-3abf-4326-9d25-c3f80875d409",
+      "status": "relapse",
+      "challengeType": "substance",
+      "date": "2026-05-05T18:42:45.767Z"
+    },
+    {
+      "id": "8f71409d-8dbf-4fef-b489-f1f7a5d6ff3b",
+      "userId": "fe99580b-013d-4e70-9516-ba9601996df8",
+      "status": "clean",
+      "challengeType": "porn",
+      "date": "2026-05-07T15:04:59.390Z"
+    },
+    {
+      "id": "b3b36039-64c3-4c43-bbb1-832c7e019374",
+      "userId": "fe99580b-013d-4e70-9516-ba9601996df8",
+      "status": "relapse",
+      "challengeType": "porn",
+      "date": "2026-05-07T15:05:14.499Z"
+    },
+    {
+      "id": "461bfed1-4e74-4d79-9e97-bd124b7699fc",
+      "userId": "fe99580b-013d-4e70-9516-ba9601996df8",
+      "status": "clean",
+      "challengeType": "substance",
+      "date": "2026-05-07T15:05:50.200Z"
+    },
+    {
+      "id": "58a9bc12-8980-49f6-b75b-29bd6ad1ab57",
+      "userId": "8b95de42-4fa4-4165-9e04-025a5ac0b647",
+      "status": "clean",
+      "challengeType": "substance",
+      "date": "2026-06-14T12:12:57.302Z"
+    }
+  ]
+}
