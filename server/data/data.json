@@ -55,6 +55,14 @@
       "password": "$2b$10$pF2W21pMLnmFb6vD6Z3q4emxkS1ToIr5QgPZOHrVZ4c8eWVGBk5ym",
       "role": "student",
       "flagged": false
+    },
+    {
+      "id": "15a6a5e4-ea22-457e-b360-f9abd1f09c4c",
+      "name": "jgfghjk",
+      "email": "josephadqmu2019@gmail.com",
+      "password": "$2b$10$sj6VXwoTcT7yTFvs0JtQTuXy9secslT6s/rHdc3QxSpy7MAje6x4q",
+      "role": "student",
+      "flagged": false
     }
   ],
   "moods": [

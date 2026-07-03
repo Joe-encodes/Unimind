@@ -1,15 +1,11 @@
-const fs = require('fs');
-const path = require('path');
+const { Pool } = require('pg');
 
-const dataPath = path.join(__dirname, '..', 'data', 'data.json');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URI,
+});
 
-const readData = () => {
-  const data = fs.readFileSync(dataPath);
-  return JSON.parse(data);
+module.exports = {
+  query: (text, params) => pool.query(text, params),
+  pool,
 };
 
-const writeData = (data) => {
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
-};
-
-module.exports = { readData, writeData };

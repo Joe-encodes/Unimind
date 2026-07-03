@@ -1,65 +1,65 @@
 const express = require('express');
 const router = express.Router();
-const { readData, writeData } = require('../utils/db');
-const { v4: uuidv4 } = require('uuid');
+const { query } = require('../utils/db');
 
 // Get mood history for a user
-router.get('/:userId', (req, res) => {
+router.get('/:userId', async (req, res) => {
   const { userId } = req.params;
-  const data = readData();
-  const userMoods = data.moods.filter(m => m.userId === userId).sort((a, b) => new Date(b.date) - new Date(a.date));
-  res.json(userMoods);
+  try {
+    const result = await query(
+      'SELECT id, user_id AS "userId", mood, notes, date FROM moods WHERE user_id = $1 ORDER BY date DESC',
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 // Log a new mood
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { userId, mood, notes } = req.body;
   
   if (!userId || !mood) {
     return res.status(400).json({ error: 'Missing userId or mood' });
   }
 
-  const data = readData();
-  
-  const newMood = {
-    id: uuidv4(),
-    userId,
-    mood, // 'Happy', 'Neutral', 'Sad', 'Stressed'
-    notes: notes || '',
-    date: new Date().toISOString()
-  };
+  try {
+    // Insert new mood
+    const insertRes = await query(
+      'INSERT INTO moods (user_id, mood, notes) VALUES ($1, $2, $3) RETURNING id, user_id AS "userId", mood, notes, date',
+      [userId, mood, notes || '']
+    );
+    const newMood = insertRes.rows[0];
 
-  data.moods.push(newMood);
+    // Mood Analysis Engine - Fetch the 3 most recent moods
+    const recentMoodsRes = await query(
+      'SELECT mood FROM moods WHERE user_id = $1 ORDER BY date DESC LIMIT 3',
+      [userId]
+    );
+    const recentMoods = recentMoodsRes.rows;
 
-  // Mood Analysis Engine
-  const userMoods = data.moods.filter(m => m.userId === userId).sort((a, b) => new Date(b.date) - new Date(a.date));
-  let triggerAlert = false;
-
-  if (userMoods.length >= 3) {
-    const lastThree = userMoods.slice(0, 3);
-    const negativeMoods = ['Sad', 'Stressed'];
-    const allNegative = lastThree.every(m => negativeMoods.includes(m.mood));
-    
-    if (allNegative) {
-      triggerAlert = true;
-      // Flag the user
-      const userIndex = data.users.findIndex(u => u.id === userId);
-      if (userIndex !== -1) {
-        data.users[userIndex].flagged = true;
+    let triggerAlert = false;
+    if (recentMoods.length >= 3) {
+      const negativeMoods = ['Sad', 'Stressed'];
+      const allNegative = recentMoods.every(m => negativeMoods.includes(m.mood));
+      
+      if (allNegative) {
+        triggerAlert = true;
+        // Flag the user in the database
+        await query('UPDATE users SET flagged = true WHERE id = $1', [userId]);
       }
-    } else {
-      // Unflag the user if they improve? We can keep them flagged until admin reviews, 
-      // but let's keep it simple: we only flag them here. Admin unflags them or they just stay flagged.
     }
+
+    res.status(201).json({ 
+      message: 'Mood logged successfully', 
+      mood: newMood,
+      alert: triggerAlert
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-
-  writeData(data);
-
-  res.status(201).json({ 
-    message: 'Mood logged successfully', 
-    mood: newMood,
-    alert: triggerAlert
-  });
 });
 
 module.exports = router;
+
