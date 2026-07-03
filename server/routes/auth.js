@@ -77,5 +77,44 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Google Login / OAuth callback sync
+router.post('/google-login', async (req, res) => {
+  const { email, name } = req.body;
+  if (!email || !name) {
+    return res.status(400).json({ error: 'Please provide email and name' });
+  }
+
+  try {
+    // Check if user exists
+    let userRes = await query('SELECT * FROM users WHERE email = $1', [email]);
+    let user = userRes.rows[0];
+
+    // If user does not exist, create a new student account
+    if (!user) {
+      const dummyPassword = await bcrypt.hash(Math.random().toString(36), 10);
+      const insertRes = await query(
+        'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING *',
+        [name, email, dummyPassword, 'student']
+      );
+      user = insertRes.rows[0];
+    }
+
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    res.status(200).json({ 
+      message: 'Google login successful', 
+      token,
+      user: { id: user.id, name: user.name, email: user.email, role: user.role, flagged: user.flagged } 
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error during Google login' });
+  }
+});
+
 module.exports = router;
+
 

@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { supabase } from '../utils/supabase';
 
 export const AuthContext = createContext();
 
@@ -16,6 +17,32 @@ export const AuthProvider = ({ children }) => {
       setToken(storedToken);
     }
     setLoading(false);
+
+    // Listen to Supabase OAuth / Sign In changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session) {
+        const { email, user_metadata } = session.user;
+        const name = user_metadata?.full_name || email.split('@')[0];
+        
+        try {
+          const res = await fetch('http://localhost:5000/api/auth/google-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, name })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            login(data.user, data.token);
+          }
+        } catch (err) {
+          console.error('Failed to sync Google user with backend:', err);
+        }
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = (userData, userToken) => {
@@ -27,11 +54,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('mentalHealthUser');
     localStorage.removeItem('mentalHealthToken');
+    await supabase.auth.signOut().catch(() => {});
   };
 
   return (
@@ -40,3 +68,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
