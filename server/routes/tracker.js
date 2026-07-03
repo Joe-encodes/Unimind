@@ -1,18 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const { readData, writeData } = require('../utils/db');
-const { v4: uuidv4 } = require('uuid');
+const { query } = require('../utils/db');
 
 // Get tracking history for a user
-router.get('/:userId', (req, res) => {
+router.get('/:userId', async (req, res) => {
   const { userId } = req.params;
-  const data = readData();
-  const userLogs = data.trackerLogs.filter(log => log.userId === userId).sort((a, b) => new Date(b.date) - new Date(a.date));
-  res.json(userLogs);
+  try {
+    const result = await query(
+      'SELECT id, user_id AS "userId", status, challenge_type AS "challengeType", date FROM tracker_logs WHERE user_id = $1 ORDER BY date DESC',
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 // Log a new day
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { userId, status, challengeType } = req.body;
   
   if (!userId || !status || !challengeType) {
@@ -24,23 +29,20 @@ router.post('/', (req, res) => {
     return res.status(400).json({ error: 'Invalid status' });
   }
 
-  const data = readData();
-  
-  const newLog = {
-    id: uuidv4(),
-    userId,
-    status, // 'clean' or 'relapse'
-    challengeType, // 'porn' or 'substance'
-    date: new Date().toISOString()
-  };
-
-  data.trackerLogs.push(newLog);
-  writeData(data);
-
-  res.status(201).json({ 
-    message: 'Day logged successfully', 
-    log: newLog
-  });
+  try {
+    const result = await query(
+      'INSERT INTO tracker_logs (user_id, status, challenge_type) VALUES ($1, $2, $3) RETURNING id, user_id AS "userId", status, challenge_type AS "challengeType", date',
+      [userId, status, challengeType]
+    );
+    
+    res.status(201).json({ 
+      message: 'Day logged successfully', 
+      log: result.rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 module.exports = router;
+
