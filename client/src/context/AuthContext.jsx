@@ -20,7 +20,9 @@ export const AuthProvider = ({ children }) => {
 
     // Listen to Supabase OAuth / Sign In changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('onAuthStateChange event:', event, 'session:', session);
       if (session) {
+        console.log('Sending access token to backend:', session.access_token);
         try {
           const res = await fetch('/api/auth/google-login', {
             method: 'POST',
@@ -28,6 +30,7 @@ export const AuthProvider = ({ children }) => {
             body: JSON.stringify({ access_token: session.access_token })
           });
           const data = await res.json();
+          console.log('Backend response:', data);
           if (res.ok) {
             login(data.user, data.token);
           }
