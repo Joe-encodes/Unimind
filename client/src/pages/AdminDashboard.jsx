@@ -4,10 +4,11 @@ import { AlertTriangle, CheckCircle, Search, User } from 'lucide-react';
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
   useEffect(() => {
     fetchUsers();
-  }, []);  const fetchUsers = async () => {
+  }, []);
+
+  const fetchUsers = async () => {
     try {
       const res = await fetch('/api/admin/users');
       const data = await res.json();
