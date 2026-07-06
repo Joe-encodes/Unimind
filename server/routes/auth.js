@@ -80,7 +80,9 @@ router.post('/login', async (req, res) => {
 // Google Login / OAuth callback sync
 router.post('/google-login', async (req, res) => {
   const { access_token } = req.body;
+  console.log('Google login request body:', req.body);
   if (!access_token) {
+    console.log('Google login failed: access_token is missing');
     return res.status(400).json({ error: 'Please provide access token' });
   }
 
@@ -98,14 +100,17 @@ router.post('/google-login', async (req, res) => {
     });
 
     if (!response.ok) {
+      console.log('Google login failed: Supabase API responded with error status:', response.status);
       return res.status(401).json({ error: 'Invalid or expired Google/Supabase token' });
     }
 
     const userData = await response.json();
+    console.log('Supabase user data response:', userData);
     const email = userData.email;
     const name = userData.user_metadata?.full_name || email.split('@')[0];
 
     if (!email) {
+      console.log('Google login failed: Email not found in Supabase user data');
       return res.status(400).json({ error: 'Email not found in token' });
     }
 

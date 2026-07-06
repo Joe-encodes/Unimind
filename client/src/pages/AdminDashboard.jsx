@@ -7,11 +7,9 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
+  }, []);  const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/users');
+      const res = await fetch('/api/admin/users');
       const data = await res.json();
       // Filter out admins so they only see students
       setUsers(data.filter(u => u.role === 'student'));
@@ -22,7 +20,7 @@ const AdminDashboard = () => {
 
   const handleUnflag = async (userId) => {
     try {
-      await fetch(`http://localhost:5000/api/admin/unflag/${userId}`, {
+      await fetch(`/api/admin/unflag/${userId}`, {
         method: 'POST'
       });
       fetchUsers(); // Refresh
@@ -30,7 +28,6 @@ const AdminDashboard = () => {
       console.error('Failed to unflag user', err);
     }
   };
-
   const filteredUsers = users.filter(u => 
     u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
     u.email.toLowerCase().includes(searchTerm.toLowerCase())

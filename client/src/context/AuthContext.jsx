@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
         try {
-          const res = await fetch('http://localhost:5000/api/auth/google-login', {
+          const res = await fetch('/api/auth/google-login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ access_token: session.access_token })

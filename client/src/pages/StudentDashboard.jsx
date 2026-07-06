@@ -26,7 +26,7 @@ const StudentDashboard = () => {
 
   const fetchMoods = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/moods/${user.id}`);
+      const res = await fetch(`/api/moods/${user.id}`);
       const data = await res.json();
       setMoods(data);
     } catch (err) {
@@ -39,7 +39,7 @@ const StudentDashboard = () => {
     if (!selectedMood) return; // Prevent empty submission
 
     try {
-      const res = await fetch('http://localhost:5000/api/moods', {
+      const res = await fetch('/api/moods', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, mood: selectedMood, notes })

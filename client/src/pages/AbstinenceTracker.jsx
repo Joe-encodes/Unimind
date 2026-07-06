@@ -51,10 +51,9 @@ const AbstinenceTracker = () => {
       fetchLogs();
     }
   }, [user]);
-
   const fetchLogs = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/tracker/${user.id}`);
+      const response = await fetch(`/api/tracker/${user.id}`);
       const data = await response.json();
       setLogs(data);
     } catch (error) {
@@ -66,7 +65,7 @@ const AbstinenceTracker = () => {
 
   const logDay = async (status) => {
     try {
-      const response = await fetch('http://localhost:5000/api/tracker', {
+      const response = await fetch('/api/tracker', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, status, challengeType: selectedChallenge })
