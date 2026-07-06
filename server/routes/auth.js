@@ -79,12 +79,36 @@ router.post('/login', async (req, res) => {
 
 // Google Login / OAuth callback sync
 router.post('/google-login', async (req, res) => {
-  const { email, name } = req.body;
-  if (!email || !name) {
-    return res.status(400).json({ error: 'Please provide email and name' });
+  const { access_token } = req.body;
+  if (!access_token) {
+    return res.status(400).json({ error: 'Please provide access token' });
   }
 
+  const supabaseUrl = process.env.SUPABASE_URL || 'https://bterinckaabrcrumtsej.supabase.co';
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'placeholder_key';
+
   try {
+    // Verify token with Supabase
+    const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${access_token}`,
+        'apikey': supabaseAnonKey
+      }
+    });
+
+    if (!response.ok) {
+      return res.status(401).json({ error: 'Invalid or expired Google/Supabase token' });
+    }
+
+    const userData = await response.json();
+    const email = userData.email;
+    const name = userData.user_metadata?.full_name || email.split('@')[0];
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email not found in token' });
+    }
+
     // Check if user exists
     let userRes = await query('SELECT * FROM users WHERE email = $1', [email]);
     let user = userRes.rows[0];
@@ -111,6 +135,7 @@ router.post('/google-login', async (req, res) => {
       user: { id: user.id, name: user.name, email: user.email, role: user.role, flagged: user.flagged } 
     });
   } catch (error) {
+    console.error('Error during Google verification:', error);
     res.status(500).json({ error: 'Internal Server Error during Google login' });
   }
 });

@@ -21,14 +21,11 @@ export const AuthProvider = ({ children }) => {
     // Listen to Supabase OAuth / Sign In changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
-        const { email, user_metadata } = session.user;
-        const name = user_metadata?.full_name || email.split('@')[0];
-        
         try {
           const res = await fetch('http://localhost:5000/api/auth/google-login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, name })
+            body: JSON.stringify({ access_token: session.access_token })
           });
           const data = await res.json();
           if (res.ok) {
