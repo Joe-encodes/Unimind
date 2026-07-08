@@ -5,7 +5,7 @@ import { Activity } from 'lucide-react';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'student' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
 
@@ -93,19 +93,7 @@ const Login = () => {
             />
           </div>
 
-          {!isLogin && (
-            <div className="input-group">
-              <label className="input-label">Role</label>
-              <select 
-                className="input-field"
-                value={formData.role}
-                onChange={e => setFormData({...formData, role: e.target.value})}
-              >
-                <option value="student">Student</option>
-                <option value="counsellor">Counsellor (Admin)</option>
-              </select>
-            </div>
-          )}
+          {/* Role is assigned server-side. All self-registered users are Students. */}
 
           <button type="submit" className="btn-primary" style={{ width: '100%' }}>
             {isLogin ? 'Sign In' : 'Register'}
