@@ -3,35 +3,118 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const logger = require('./utils/logger');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(morgan('dev')); // Request logging
+// ─── Security Headers (helmet) ────────────────────────────────────────────────
+// Removes X-Powered-By, sets X-Frame-Options, X-Content-Type-Options,
+// Strict-Transport-Security, Referrer-Policy, and more.
+app.use(helmet());
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
+// ─── CORS ────────────────────────────────────────────────────────────────────
+const allowedOrigins = (process.env.FRONTEND_URL || '').split(',').map(o => o.trim()).filter(Boolean);
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow server-to-server (no origin) only in development
+    if (!origin && !IS_PRODUCTION) {
+      return callback(null, true);
+    }
+    if (origin && allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    logger.warn('CORS rejected request', { origin });
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
+
+// ─── Body Parsing (with size limit to prevent DoS via large payloads) ────────
+app.use(bodyParser.json({ limit: '10kb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
+
+// ─── HTTP Request Logging ────────────────────────────────────────────────────
+// Use 'combined' (Apache format) in production for structured log analysis,
+// 'dev' (colourised, compact) only during local development.
+app.use(morgan(IS_PRODUCTION ? 'combined' : 'dev'));
+
+// ─── Winston Structured Logging Middleware ────────────────────────────────────
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    logger.info(`HTTP ${req.method} ${req.originalUrl}`, {
+      method: req.method,
+      url: req.originalUrl,
+      status: res.statusCode,
+      duration,
+      ip: req.ip
+    });
+  });
+  next();
+});
+
+// ─── Global Rate Limiter (all routes) ────────────────────────────────────────
+// 300 requests per 15 minutes per IP — broad baseline protection
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' }
+});
+app.use(globalLimiter);
+
+// ─── Strict Rate Limiter for Auth Endpoints ───────────────────────────────────
+// 10 attempts per 15 minutes per IP — prevents brute force and credential stuffing
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many authentication attempts. Please wait 15 minutes before trying again.' }
+});
+
+// ─── Moderate Rate Limiter for AI Chat Endpoint ──────────────────────────────
+// 30 requests per 15 minutes per IP — prevents Gemini API billing attacks
+const chatLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Chat rate limit exceeded. Please wait before sending more messages.' }
+});
+
+// ─── Routes ──────────────────────────────────────────────────────────────────
+app.use('/api/auth', authLimiter, require('./routes/auth'));
 app.use('/api/moods', require('./routes/moods'));
 app.use('/api/admin', require('./routes/admin'));
-app.use('/api/chat', require('./routes/chat'));
+app.use('/api/chat', chatLimiter, require('./routes/chat'));
 app.use('/api/tracker', require('./routes/tracker'));
 
-// Global Error Handler
+// ─── 404 Catch-all ───────────────────────────────────────────────────────────
+// Returns JSON instead of Express's default HTML (which leaks version info)
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
+// ─── Global Error Handler ─────────────────────────────────────────────────────
 app.use((err, req, res, next) => {
   logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
   res.status(err.status || 500).json({
-    error: process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message
+    error: IS_PRODUCTION ? 'Internal Server Error' : err.message
   });
 });
 
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+// ─── Start Server (skip when running on Vercel) ───────────────────────────────
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
-    logger.info(`Server running on port ${PORT}`);
+    logger.info(`Server running on port ${PORT}`, { port: PORT, env: process.env.NODE_ENV });
   });
 }
 
 module.exports = app;
-
