@@ -7,26 +7,30 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
   const fetchUsers = async () => {
+    const token = sessionStorage.getItem('mentalHealthToken');
     try {
-      const res = await fetch('/api/admin/users');
+      const res = await fetch('/api/admin/users', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await res.json();
       // Filter out admins so they only see students
       setUsers(data.filter(u => u.role === 'student'));
     } catch (err) {
-      console.error('Failed to fetch users', err);
+      if (import.meta.env.DEV) { console.error('Failed to fetch users', err) };
     }
   };
 
   const handleUnflag = async (userId) => {
+    const token = sessionStorage.getItem('mentalHealthToken');
     try {
       await fetch(`/api/admin/unflag/${userId}`, {
-        method: 'POST'
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       fetchUsers(); // Refresh
     } catch (err) {
-      console.error('Failed to unflag user', err);
+      if (import.meta.env.DEV) { console.error('Failed to unflag user', err) };
     }
   };
   const filteredUsers = users.filter(u => 

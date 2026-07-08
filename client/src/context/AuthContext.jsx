@@ -3,15 +3,23 @@ import { supabase } from '../utils/supabase';
 
 export const AuthContext = createContext();
 
+// #18 Token Storage: sessionStorage is used instead of localStorage.
+// sessionStorage clears automatically when the browser tab/window is closed,
+// which is critical on shared devices (university computer labs).
+// Tokens are still accessible to JS on the page (same as localStorage),
+// but do not persist across sessions.
+const SESSION_USER_KEY = 'mentalHealthUser';
+const SESSION_TOKEN_KEY = 'mentalHealthToken';
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check local storage for user simulation session
-    const storedUser = localStorage.getItem('mentalHealthUser');
-    const storedToken = localStorage.getItem('mentalHealthToken');
+    // Restore session from sessionStorage
+    const storedUser = sessionStorage.getItem(SESSION_USER_KEY);
+    const storedToken = sessionStorage.getItem(SESSION_TOKEN_KEY);
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
@@ -32,7 +40,7 @@ export const AuthProvider = ({ children }) => {
             login(data.user, data.token);
           }
         } catch (err) {
-          console.error('Failed to sync Google user with backend:', err);
+          // Intentionally silent — user will stay on login page if Google sync fails
         }
       }
     });
@@ -45,17 +53,17 @@ export const AuthProvider = ({ children }) => {
   const login = (userData, userToken) => {
     setUser(userData);
     setToken(userToken);
-    localStorage.setItem('mentalHealthUser', JSON.stringify(userData));
+    sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify(userData));
     if (userToken) {
-      localStorage.setItem('mentalHealthToken', userToken);
+      sessionStorage.setItem(SESSION_TOKEN_KEY, userToken);
     }
   };
 
   const logout = async () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem('mentalHealthUser');
-    localStorage.removeItem('mentalHealthToken');
+    sessionStorage.removeItem(SESSION_USER_KEY);
+    sessionStorage.removeItem(SESSION_TOKEN_KEY);
     await supabase.auth.signOut().catch(() => {});
   };
 
@@ -65,4 +73,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-

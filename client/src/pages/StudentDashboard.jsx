@@ -25,12 +25,15 @@ const StudentDashboard = () => {
   }, [user.id]);
 
   const fetchMoods = async () => {
+    const token = sessionStorage.getItem('mentalHealthToken');
     try {
-      const res = await fetch(`/api/moods/${user.id}`);
+      const res = await fetch(`/api/moods/${user.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await res.json();
       setMoods(data);
     } catch (err) {
-      console.error('Failed to fetch moods', err);
+      if (import.meta.env.DEV) { console.error('Failed to fetch moods', err) };
     }
   };
 
@@ -38,10 +41,14 @@ const StudentDashboard = () => {
     e.preventDefault();
     if (!selectedMood) return; // Prevent empty submission
 
+    const token = sessionStorage.getItem('mentalHealthToken');
     try {
       const res = await fetch('/api/moods', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ userId: user.id, mood: selectedMood, notes })
       });
       const data = await res.json();
@@ -54,7 +61,7 @@ const StudentDashboard = () => {
       setNotes('');
       fetchMoods(); // Refresh history
     } catch (err) {
-      console.error('Error logging mood', err);
+      if (import.meta.env.DEV) { console.error('Error logging mood', err) };
     }
   };
 

@@ -70,12 +70,16 @@ const ChatSupport = () => {
     const newMessages = [...messages, newUserMsg];
     setMessages(newMessages);
     setInputText('');
-    setIsTyping(true);
 
+    const token = sessionStorage.getItem('mentalHealthToken');
     try {
+      setIsTyping(true);
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ 
           messages: newMessages,
           topic: selectedTopic.id 
@@ -95,7 +99,7 @@ const ChatSupport = () => {
         throw new Error(data.error || 'Failed to get response');
       }
     } catch (error) {
-      console.error('Chat error:', error);
+      if (import.meta.env.DEV) { console.error('Chat error:', error) };
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         text: "I'm sorry, I'm having trouble connecting right now. Please make sure the server is running and the API key is configured.",
@@ -245,6 +249,7 @@ const ChatSupport = () => {
                   ))}
                 </div>
               </div>
+
             </div>
 
             {/* Emergency Resources Sidebar (Visible in Topic Selection only) */}
@@ -268,6 +273,7 @@ const ChatSupport = () => {
                 </div>
               </div>
             </div>
+
           </div>
         </>
       )}

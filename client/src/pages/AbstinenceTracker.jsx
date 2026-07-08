@@ -51,23 +51,31 @@ const AbstinenceTracker = () => {
       fetchLogs();
     }
   }, [user]);
+
   const fetchLogs = async () => {
+    const token = sessionStorage.getItem('mentalHealthToken');
     try {
-      const response = await fetch(`/api/tracker/${user.id}`);
+      const response = await fetch(`/api/tracker/${user.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await response.json();
       setLogs(data);
     } catch (error) {
-      console.error('Error fetching logs:', error);
+      if (import.meta.env.DEV) { console.error('Error fetching logs:', error) };
     } finally {
       setLoading(false);
     }
   };
 
   const logDay = async (status) => {
+    const token = sessionStorage.getItem('mentalHealthToken');
     try {
       const response = await fetch('/api/tracker', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ userId: user.id, status, challengeType: selectedChallenge })
       });
       
@@ -83,7 +91,7 @@ const AbstinenceTracker = () => {
         }
       }
     } catch (error) {
-      console.error('Error logging day:', error);
+      if (import.meta.env.DEV) { console.error('Error logging day:', error) };
     }
   };
 
