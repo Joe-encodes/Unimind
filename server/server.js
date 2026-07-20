@@ -22,12 +22,20 @@ const allowedOrigins = (process.env.FRONTEND_URL || '')
   .filter(Boolean);
 
 app.use((req, res, next) => {
-  const origin = req.headers.origin ? req.headers.origin.trim().replace(/\/$/, '') : null;
+  const rawOrigin = req.headers.origin;
+  const origin = rawOrigin ? rawOrigin.trim().replace(/\/$/, '') : null;
+  const host = req.headers.host ? req.headers.host.trim().toLowerCase() : '';
+
+  // Standardize protocol comparison for same-host deployment (e.g. unimind-indol.vercel.app)
+  const isSameHost = origin && (
+    origin === `https://${host}` || 
+    origin === `http://${host}`
+  );
   
-  // If an origin exists, it must be in the whitelist
+  // If an origin exists, allow if it matches host OR is in allowedOrigins whitelist
   if (origin) {
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
+    if (isSameHost || allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', rawOrigin);
       res.setHeader('Access-Control-Allow-Credentials', 'true');
       res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
@@ -36,7 +44,7 @@ app.use((req, res, next) => {
       }
       return next();
     }
-    logger.warn('CORS rejected request', { origin });
+    logger.warn('CORS rejected request', { origin, host, allowedOrigins });
     return res.status(403).json({ error: 'Not allowed by CORS' });
   }
 
