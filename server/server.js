@@ -11,6 +11,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
+// Enable trust proxy for Vercel/reverse proxies so rate limiting & IP logging work accurately
+app.set('trust proxy', 1);
+
 // ─── Security Headers (helmet) ────────────────────────────────────────────────
 // Removes X-Powered-By, sets X-Frame-Options, X-Content-Type-Options,
 // Strict-Transport-Security, Referrer-Policy, and more.
