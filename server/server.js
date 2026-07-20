@@ -16,10 +16,13 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 // Strict-Transport-Security, Referrer-Policy, and more.
 app.use(helmet());
 
-const allowedOrigins = (process.env.FRONTEND_URL || '').split(',').map(o => o.trim()).filter(Boolean);
+const allowedOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map(o => o.trim().replace(/\/$/, ''))
+  .filter(Boolean);
 
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
+  const origin = req.headers.origin ? req.headers.origin.trim().replace(/\/$/, '') : null;
   
   // If an origin exists, it must be in the whitelist
   if (origin) {
