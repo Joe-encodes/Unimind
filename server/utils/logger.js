@@ -1,16 +1,16 @@
 const winston = require('winston');
 const { query } = require('./db');
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.Console({
-      format: winston.format.simple()
-    }),
+const transports = [
+  new winston.transports.Console({
+    format: winston.format.simple()
+  })
+];
+
+// Serverless environments like Vercel have read-only filesystems.
+// Only enable file transport logs when running locally or on self-hosted environments.
+if (!process.env.VERCEL) {
+  transports.push(
     new winston.transports.File({ 
       filename: 'logs/error.log', 
       level: 'error' 
@@ -18,7 +18,16 @@ const logger = winston.createLogger({
     new winston.transports.File({ 
       filename: 'logs/combined.log' 
     })
-  ]
+  );
+}
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports
 });
 
 const logToDb = (level, message, meta = {}) => {
