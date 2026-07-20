@@ -16,22 +16,44 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 // Strict-Transport-Security, Referrer-Policy, and more.
 app.use(helmet());
 
-// ─── CORS ────────────────────────────────────────────────────────────────────
 const allowedOrigins = (process.env.FRONTEND_URL || '').split(',').map(o => o.trim()).filter(Boolean);
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow server-to-server (no origin) only in development
-    if (!origin && !IS_PRODUCTION) {
-      return callback(null, true);
-    }
-    if (origin && allowedOrigins.includes(origin)) {
-      return callback(null, true);
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  // If an origin exists, it must be in the whitelist
+  if (origin) {
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+      if (req.method === 'OPTIONS') {
+        return res.sendStatus(204);
+      }
+      return next();
     }
     logger.warn('CORS rejected request', { origin });
-    callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true
-}));
+    return res.status(403).json({ error: 'Not allowed by CORS' });
+  }
+
+  // If no origin exists (same-origin POST or backend tool)
+  if (!IS_PRODUCTION) {
+    return next();
+  }
+
+  // Verify same-origin via standard Sec-Fetch-Site header
+  const secFetchSite = req.headers['sec-fetch-site'];
+  if (secFetchSite === 'same-origin' || secFetchSite === 'same-site') {
+    return next();
+  }
+
+  logger.warn('CORS rejected request (missing origin and not same-origin)', { 
+    secFetchSite, 
+    host: req.headers.host 
+  });
+  return res.status(403).json({ error: 'Not allowed by CORS' });
+});
 
 // ─── Body Parsing (with size limit to prevent DoS via large payloads) ────────
 app.use(bodyParser.json({ limit: '10kb' }));
